@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<title>Track your location</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-teal.css">
+<body style="max-width:600px">
+
+<!-- Side Bar-->
+<nav class="w3-sidebar w3-bar-block w3-card" id="mySidebar">
+<div class="w3-container w3-theme-d2">
+  <span onclick="closeSidebar()" class="w3-button w3-display-topright w3-large">X</span>
+  <br>
+  <div class="w3-padding w3-center">
+    <img class="w3-circle" src="https://neogeoweb.ca/a3/group3/logo.jpeg" style="width:75%">
+  </div>
+</div>
+<a class="w3-bar-item w3-button" href="#">Jiahua</a>
+<a class="w3-bar-item w3-button" href="#">Tobey</a>
+<a class="w3-bar-item w3-button" href="#">Max</a>
+</nav>
+<!-- Side Bar Ends-->
+
+<!-- Header-->
+<header class="w3-bar w3-card w3-theme">
+  <button class="w3-bar-item w3-button w3-xxxlarge w3-hover-theme" onclick="openSidebar()">&#9776;</button>
+  <h1 class="w3-bar-item">Track your location</h1>
+  <br/>
+</header>
+<!-- Header Ends-->
+
+<!-- Content-->
+<div class="w3-container">
+<hr>
+<div class="w3-cell-row">
+
+	<!-- Image -->
+  <div class="w3-cell" style="width:30%">
+    <img src="https://neogeoweb.ca/a3/group3/Worldmap.png" style="width:100%">
+  </div>
+  <div class="w3-cell w3-container">
+	<!-- Text -->
+	<script type="text/javascript">
+		do { var userID1 = prompt ("Please enter your user ID");
+		} while (userID1 != "260712571" && userID1 != "260731255" && userID1 != "260724796")
+		document.write("Hello! You are logined in as "+ userID1 + ".");
+	</script>
+  <p> Welcome to our super cool app! This page tracks your current location every 30 seconds when you use it on your smartphone.To do this, make sure you allow the page to use your location. Your location information will then be sent to a csv and displayed on a map. Try it!
+  <p> Click the button to get your coordinates. </p> 
+  <button onclick="getLocation()">Begin Tracking</button>
+  <p id = "demo"> </p>
+  <p id = "datetime"> </p>
+  </div>
+</div>  
+  <!-- Text Ends-->
+<!-- Content Ends-->
+
+<!-- Footer-->
+<footer class="w3-container w3-theme w3-margin-top">
+  <h3 align = "center" >GEOG 384 Group 3</h3>
+</footer>
+<!-- Footer Ends-->
+
+
+<script>
+//close sidebar at the beginning
+closeSidebar(); 
+
+//function to open sidebar
+function openSidebar() {
+  document.getElementById("mySidebar").style.display = "block";
+}
+
+//function to close sidebar
+function closeSidebar() {
+  document.getElementById("mySidebar").style.display = "none";
+}
+
+//set time interval of calling the getlocation function to 30s
+var timevariable = setInterval (getLocation, 30000) ;
+
+var x = document.getElementById("demo");
+
+//function to get location of the user
+function getLocation() {	
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+    x.innerHTML = "Geolocation is not supported by this browser.";
+  }
+}
+
+//Function to show position
+function showPosition(position) {
+  x.innerHTML = "Latitude: " + position.coords.latitude + 
+  "<br>Longitude: " + position.coords.longitude;
+  
+  //Variable to save the time information
+  var d = new Date () ;
+  
+  document.getElementById("datetime").innerHTML = d;
+
+  //Function to write the user and date and location data to CSV file
+  function writeToCSV(timestamp_in, userID_in, lat_in, lng_in){
+  	var user = {
+      timestamp_in: encodeURIComponent(timestamp_in),
+      userID_in: encodeURIComponent(userID_in),
+      lat_in: encodeURIComponent(lat_in),
+      lng_in: encodeURIComponent(lng_in),
+  	};	
+  	if(window.XMLHttpRequest){xmlhttp=new XMLHttpRequest();}
+  	else{xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");}
+  	var url = "?timestamp="+user.timestamp_in+"&userID="+user.userID_in+"&lat="+user.lat_in+"&lng="+user.lng_in;
+  	var sendUrl = 'writetojson.php' + url;
+  	xmlhttp.open("GET", sendUrl, false); 
+  	xmlhttp.send();
+  }  
+  //Call the function to write the data to CSV file
+  writeToCSV(d, userID1, position.coords.latitude, position.coords.longitude);
+  
+}
+</script>
+
+</body>

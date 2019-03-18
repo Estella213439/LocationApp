@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<script src='https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.js'></script>
+	<link href='https://api.mapbox.com/mapbox-gl-js/v0.53.0/mapbox-gl.css' rel='stylesheet' />
+</head>
+
+<title>Lovely Map</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3pro.css">
+<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-teal.css">
+<body style="max-width:600px">
+
+<!-- Header-->
+<header class="w3-bar w3-card w3-theme">
+    <h1 class="w3-bar-item">Location Map</h1>
+  	<br/>
+</header>
+<!-- Header Ends-->
+
+<!-- Content-->
+	<!--Button-->
+	<div class="w3-container">
+		<hr>
+		<button class="w3-bar-item w3-button" onclick="visibility('Jiahua')"> Jiahua </button>
+		<button class="w3-bar-item w3-button" onclick="visibility('Tobey')"> Tobey </button>
+		<button class="w3-bar-item w3-button" onclick="visibility('Max')"> Max </button>
+	</div>
+	<!--Button Ends-->
+
+	<!-- map -->
+	<div id='map' style='width: 600px; height: 300px;'></div>
+	<script>
+		mapboxgl.accessToken = 'pk.eyJ1IjoiZXN0ZWxsYTIxMzQzOSIsImEiOiJjanJ1eTRndHgzMDY2M3lsYXMwaHVqNGVuIn0.-NQ2jPS_wCAxQ2bCVbsabA';
+		var map = new mapboxgl.Map({
+			container: 'map',
+			style: 'mapbox://styles/mapbox/streets-v11',
+			center: [-73.5772, 45.5048],
+			pitch: 60, // pitch in degrees
+			bearing: -60, // bearing in degrees
+			zoom: 13
+		});
+		var layers = document.getElementById('menu-ui');
+	</script>
+	<!-- map Ends--> 
+<!-- Content Ends-->
+
+<!-- Footer-->
+<footer class="w3-container w3-theme w3-margin-top">
+  	<h3 align = "center" >GEOG 384 Group 3</h3>
+</footer>
+<!-- Footer Ends-->
+
+
+<script>
+//Add Jiahua's data to the map
+map.on('load', function() {
+	var url = 'Jiahua.json';
+	map.addSource('Jiahua.json', { type: 'geojson', data: url});
+	map.addLayer({
+		id: "Jiahua",
+		type: "line",
+		source: "Jiahua.json",
+		layout: {
+			'visibility': 'visible'
+		},
+		'paint': {
+		"line-color": "#27993b",
+		"line-width": 3
+		}
+	});
+});
+
+//Add Tobey's data to the map
+map.on('load', function() {
+	var url = '260724796.json';
+	map.addSource('260724796.json', { type: 'geojson', data: url});
+	map.addLayer({
+		id: "Tobey",
+		type: "line",
+		source: "260724796.json",
+		layout: {
+			'visibility': 'visible'
+		},
+		'paint': {
+		"line-color": "#272799",
+		'line-width': 3
+		}
+	});
+});
+
+//Add Max's data to the map
+map.on('load', function() {
+	var url = '260731255.json';
+	map.addSource('260731255.json', { type: 'geojson', data: url});
+	map.addLayer({
+		id: "Max",
+		type: "line",
+		source: "260731255.json",
+		layout: {
+			'visibility': 'visible'
+		},
+		'paint': {
+		"line-color": "#fcfc20",
+		"line-width": 3
+		}
+	});
+});
+
+//Function to change visibility
+function visibility (id){
+	var mapLayer = map.getLayer(id);
+	var vis = mapLayer.getLayoutProperty('visibility')
+    if(vis == 'visible') {
+      // Remove map layer & source.
+      mapLayer.setLayoutProperty('visibility', 'none');
+    }
+	else{
+		mapLayer.setLayoutProperty('visibility', 'visible');
+	}
+}
+
+//Add a navigation bar
+map.addControl(new mapboxgl.NavigationControl());
+	
+</script>
+
+</body>
